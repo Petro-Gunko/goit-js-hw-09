@@ -9,18 +9,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const initializeForm = () => {
         const storedState = JSON.parse(localStorage.getItem(storageKey));
         if (storedState) {
-            emailInput.value = storedState.email || '';
-            messageInput.value = storedState.message || '';
+            emailInput.value = storedState.email.trim() || '';
+            messageInput.value = storedState.message.trim() || '';
         }
     };
-
     initializeForm();
 
     // Event listener for the input event
     form.addEventListener('input', event => {
         const currentState = {
-            email: emailInput.value,
-            message: messageInput.value
+            email: emailInput.value.trim(),
+            message: messageInput.value.trim()
         };
         localStorage.setItem(storageKey, JSON.stringify(currentState));
         console.log(currentState);
@@ -31,9 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const currentState = JSON.parse(localStorage.getItem(storageKey));
         console.log(currentState);
-        form.reset();
-        localStorage.removeItem(storageKey);
+        if (currentState.email.trim() !== '' && currentState.message.trim() !== '') {
+            form.reset();
+            localStorage.removeItem(storageKey);
+        } else {
+            console.log('Please fill in both email and message fields.');
+        }
     });
 });
-
-
