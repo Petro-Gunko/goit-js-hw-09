@@ -22,14 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
             message: messageInput.value.trim()
         };
         localStorage.setItem(storageKey, JSON.stringify(currentState));
-        console.log(currentState);
+        
     });
 
     // Event listener for the submit event
     form.addEventListener('submit', event => {
         event.preventDefault();
         const currentState = JSON.parse(localStorage.getItem(storageKey));
-        console.log(currentState);
+        
         if (currentState.email.trim() !== '' && currentState.message.trim() !== '') {
             form.reset();
             localStorage.removeItem(storageKey);
