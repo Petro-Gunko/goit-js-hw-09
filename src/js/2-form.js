@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const initializeForm = () => {
         const storedState = JSON.parse(localStorage.getItem(storageKey));
         if (storedState) {
-            emailInput.value = storedState.email;
-            messageInput.value = storedState.message;
+            emailInput.value = storedState.email || '';
+            messageInput.value = storedState.message || '';
         }
     };
     initializeForm();
@@ -22,9 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             message: messageInput.value.trim()
         };
         localStorage.setItem(storageKey, JSON.stringify(currentState));
-        console.log(currentState);
-
-    
+           
     };
 
     // Event listener для події input
@@ -37,17 +35,24 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
        
         if (emailInput.value.trim() === '' || messageInput.value.trim() === '') {
-
-            const errorMessage = document.createElement('div');
-            errorMessage.textContent = 'Please fill in both email and message fields.';
-            errorMessage.style.color = 'red';
-            form.appendChild(errorMessage);
-        } 
-        
-        const currentState = JSON.parse(localStorage.getItem(storageKey));
-        if (currentState && currentState.email !== '' && currentState.message !== '') {
-            form.reset();
-            localStorage.removeItem(storageKey);
-        }
+            // Перевіряємо чи вже існує повідомлення про помилку, і якщо так, то не додавати нове.
+            if (!document.querySelector('.error-message')) {
+                const errorMessage = document.createElement('div');
+                errorMessage.textContent = 'Please fill in both email and message fields.';
+                errorMessage.style.color = 'red';
+                errorMessage.classList.add('error-message');
+                form.appendChild(errorMessage);
+            }
+        } else {
+            const currentState = JSON.parse(localStorage.getItem(storageKey));
+            if (currentState && currentState.email !== '' && currentState.message !== '') {
+                console.log(currentState);
+                form.reset();
+                localStorage.removeItem(storageKey);
+            }
+        }  
     });
 });
+
+
+
