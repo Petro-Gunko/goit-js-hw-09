@@ -5,37 +5,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageInput = document.querySelector('textarea[name="message"]');
     const storageKey = 'feedback-form-state';
 
-    // Initialize form fields based on the stored state
+    // Ініціалізуємо поля форми відповідно до збереженого стану
     const initializeForm = () => {
         const storedState = JSON.parse(localStorage.getItem(storageKey));
         if (storedState) {
-            emailInput.value = storedState.email.trim() || '';
-            messageInput.value = storedState.message.trim() || '';
+            emailInput.value = storedState.email;
+            messageInput.value = storedState.message;
         }
     };
     initializeForm();
 
-    // Event listener for the input event
-    form.addEventListener('input', event => {
+    // Функція для валідації та збереження стану форми
+    const validateAndSaveForm = () => {
         const currentState = {
             email: emailInput.value.trim(),
             message: messageInput.value.trim()
         };
         localStorage.setItem(storageKey, JSON.stringify(currentState));
         console.log(currentState);
+
+    
+    };
+
+    // Event listener для події input
+    form.addEventListener('input', event => {
+        validateAndSaveForm();
     });
 
-    // Event listener for the submit event
+    // Event listener для події submit
     form.addEventListener('submit', event => {
         event.preventDefault();
+       
+        if (emailInput.value.trim() === '' || messageInput.value.trim() === '') {
+
+            const errorMessage = document.createElement('div');
+            errorMessage.textContent = 'Please fill in both email and message fields.';
+            errorMessage.style.color = 'red';
+            form.appendChild(errorMessage);
+        } 
+        
         const currentState = JSON.parse(localStorage.getItem(storageKey));
-        console.log(currentState);
-        if (currentState.email.trim() !== '' && currentState.message.trim() !== '') {
+        if (currentState && currentState.email !== '' && currentState.message !== '') {
             form.reset();
             localStorage.removeItem(storageKey);
-        } else {
-            console.log('Please fill in both email and message fields.');
         }
     });
 });
-
