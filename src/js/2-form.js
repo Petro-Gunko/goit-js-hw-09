@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(currentState);
                 form.reset();
                 localStorage.removeItem(storageKey);
+                document.querySelector('div').remove()
             }
         }  
     });
